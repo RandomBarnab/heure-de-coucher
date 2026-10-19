@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>Heure de coucher</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1c1c1e;
+      --muted: #6e6e73;
+      --accent: #007aff;
+      --border: #e5e5ea;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      padding: calc(28px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));
+    }
+
+    h1 {
+      margin: 8px 0 6px;
+      font-size: clamp(30px, 8vw, 40px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    label, summary {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 6px 0;
+    }
+
+    input[type="time"], input[type="number"] {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfbfd;
+      color: var(--text);
+      font: inherit;
+      font-size: 20px;
+      padding: 9px 10px;
+      text-align: center;
+      -webkit-appearance: none;
+    }
+
+    input[type="time"] {
+      width: 142px;
+    }
+
+    input[type="number"] {
+      width: 92px;
+      font-size: 17px;
+    }
+
+    input:focus, summary:focus-visible {
+      outline: 3px solid rgba(0, 122, 255, 0.22);
+      outline-offset: 2px;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 22px 18px;
+      border-radius: 18px;
+      background: #eef6ff;
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #bedtime {
+      display: block;
+      margin-top: 5px;
+      color: var(--accent);
+      font-size: clamp(42px, 14vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.06em;
+      line-height: 1;
+    }
+
+    #details {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    details {
+      margin-top: 18px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--accent);
+      list-style-position: inside;
+    }
+
+    .settings {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hint {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #000000;
+        --card: #1c1c1e;
+        --text: #f2f2f7;
+        --muted: #98989f;
+        --border: #38383a;
+      }
+
+      input[type="time"], input[type="number"] {
+        background: #2c2c2e;
+      }
+
+      .result {
+        background: #102a43;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>À quelle heure dormir ?</h1>
+    <p class="intro">Indique l'heure à laquelle tu veux te réveiller. Je calcule l'heure à laquelle éteindre.</p>
+
+    <section class="card" aria-label="Calcul de l'heure de coucher">
+      <div class="field">
+        <label for="wakeTime">Heure de réveil</label>
+        <!-- Sur iOS, ce champ utilise le sélecteur natif en mode roues. -->
+        <input id="wakeTime" type="time" step="60" value="07:00" aria-label="Heure de réveil">
+      </div>
+
+      <div class="result" aria-live="polite">
+        <span class="result-label">Éteindre à</span>
+        <strong id="bedtime">22:30</strong>
+        <div id="details">pour dormir 8 h, avec 30 min pour t'endormir</div>
+      </div>
+
+      <details>
+        <summary>Modifier les paramètres</summary>
+        <div class="settings">
+          <div class="field">
+            <label for="sleepHours">Sommeil souhaité</label>
+            <input id="sleepHours" type="number" min="0" max="24" step="0.5" value="8" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="fallAsleep">Temps pour s'endormir</label>
+            <input id="fallAsleep" type="number" min="0" max="180" step="5" value="30" inputmode="numeric">
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <p class="hint">Sur iPhone, touche l'heure pour utiliser le sélecteur en roues d'iOS.</p>
+  </main>
+
+  <script>
+    const wakeTime = document.querySelector('#wakeTime');
+    const sleepHours = document.querySelector('#sleepHours');
+    const fallAsleep = document.querySelector('#fallAsleep');
+    const bedtime = document.querySelector('#bedtime');
+    const details = document.querySelector('#details');
+
+    function formatTime(totalMinutes) {
+      const minutesInDay = 24 * 60;
+      const normalized = ((totalMinutes % minutesInDay) + minutesInDay) % minutesInDay;
+      const hours = Math.floor(normalized / 60);
+      const minutes = normalized % 60;
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+
+    function calculate() {
+      const [hours, minutes] = wakeTime.value.split(':').map(Number);
+      const sleep = Number(sleepHours.value) || 0;
+      const fallingAsleep = Number(fallAsleep.value) || 0;
+
+      if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return;
+
+      const wakeMinutes = hours * 60 + minutes;
+      const totalSleepMinutes = Math.round(sleep * 60) + fallingAsleep;
+      bedtime.textContent = formatTime(wakeMinutes - totalSleepMinutes);
+
+      const sleepLabel = `${sleep.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} h`;
+      details.textContent = `pour dormir ${sleepLabel}, avec ${fallingAsleep} min pour t'endormir`;
+    }
+
+    [wakeTime, sleepHours, fallAsleep].forEach((element) => {
+      element.addEventListener('input', calculate);
+      element.addEventListener('change', calculate);
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
